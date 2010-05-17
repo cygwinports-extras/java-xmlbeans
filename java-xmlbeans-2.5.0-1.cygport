@@ -1,0 +1,28 @@
+JAVA_CLASSPATH="jdk6-langtools.jar:resolver.jar"
+inherit ant
+
+
+
+SRC_URI="mirror://apache/xmlbeans/source/${P#java-}-src.tgz"
+
+ANT_OPTS="-Xmx512M"
+ANT_BUILD_TARGETS="xbean docs"
+ANT_INSTALL_JARS="build/lib/*bean*.jar"
+ANT_INSTALL_JAVADOC="build/docs/reference"
+
+src_install() {
+	cd ${B}
+	ant_install
+
+	java_wrapper dumpxsb xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.XsbDumper
+	java_wrapper inst2xsd xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.inst2xsd.Inst2Xsd
+	java_wrapper scomp xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.SchemaCompiler
+	java_wrapper sdownload xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.SchemaResourceManager
+	java_wrapper sfactor xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.FactorImports
+	java_wrapper svalidate xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.StreamInstanceValidator
+	java_wrapper validate xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.InstanceValidator
+	java_wrapper xpretty xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.PrettyPrinter
+	java_wrapper xsd2inst xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.xsd2inst.SchemaInstanceGenerator
+	java_wrapper xsdtree xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.TypeHierarchyPrinter
+	java_wrapper xstc xbean.jar:xbean_xpath.jar org.apache.xmlbeans.impl.tool.XSTCTester
+}
